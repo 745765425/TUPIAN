@@ -1,0 +1,72 @@
+微信小程序开发常见问题及解决方案
+jsbridge 调用过早问题
+错误：[jsbridge] invoke reportKeyValue fail: too eayly
+解决方案：
+- 使用 globalData 管理应用状态
+- 简化生命周期方法
+- 避免在初始化阶段调用复杂API
+- 使用 Promise 管理异步初始化
+模拟器启动失败
+错误：Error: pages/index/index.json: renderer 字段配置错误
+解决方案：
+- renderer 必须使用正确的值："webview"/"cover-view"/"skyline"/"xr-frame"
+- componentFramework 必须使用正确的值："exparser"/"glass-easel"
+lazyCodeLoading 配置错误
+错误：lazyCodeLoading.requiredComponents 不能为空
+解决方案：
+在 manifest.json 中正确配置：
+"lazyCodeLoading": "requiredComponents"  // 必须是字符串
+属性命名规范问题
+错误：Bad attr 'titleText' with message: unexpected token
+解决方案：
+- 避免使用驼峰命名
+- 使用短横线命名法
+- 简化数据结构
+项目配置最佳实践
+// manifest.json 关键配置
+{
+    "mp-weixin": {
+        "appid": "你的小程序ID",
+        "setting": {
+            "urlCheck": false,
+            "es6": true,
+            "postcss": true,
+            "minified": true
+        },
+        "usingComponents": true,
+        "lazyCodeLoading": "requiredComponents"
+    }
+}
+
+// pages.json 关键配置
+{
+    "pages": [{
+        "style": {
+            "renderer": "webview",
+            "componentFramework": "exparser",
+            "navigationStyle": "custom"
+        }
+    }]
+}
+初始化流程建议
+// App.vue
+export default {
+    globalData: {
+        isReady: false
+    },
+    onLaunch() {
+        // 简化启动逻辑
+        this.globalData.isReady = true
+    }
+}
+开发工具相关建议
+定期清除项目缓存
+使用最新版本的微信开发者工具
+重新编译项目时删除 dist 和 unpackage 目录
+确保 node_modules 完整性
+性能优化建议
+避免复杂的动态特性
+使用简单的状态管理
+减少不必要的生命周期方法
+使用 CSS 代替 JavaScript 动画
+避免过早的 API 调用
